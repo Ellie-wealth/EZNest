@@ -44,8 +44,6 @@
       display: flex;
     }
 
-    /* SIDEBAR */
-
     .sidebar {
       width: 245px;
       min-height: 100vh;
@@ -83,7 +81,6 @@
       font-family: Georgia, serif;
       font-size: 25px;
       font-weight: bold;
-      letter-spacing: .3px;
     }
 
     .nav {
@@ -99,7 +96,6 @@
       text-align: left;
       padding: 13px 14px;
       border-radius: 10px;
-      transition: .2s;
     }
 
     .nav button:hover,
@@ -116,8 +112,6 @@
       font-size: 14px;
       line-height: 1.6;
     }
-
-    /* MAIN */
 
     .main {
       margin-left: 245px;
@@ -190,8 +184,6 @@
       margin-top: 8px;
     }
 
-    /* SUBJECTS */
-
     .subjects {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -203,7 +195,7 @@
       border: 1px solid var(--border);
       border-radius: 15px;
       padding: 22px;
-      min-height: 125px;
+      min-height: 145px;
       transition: transform .2s, box-shadow .2s;
     }
 
@@ -221,6 +213,20 @@
     .subject-card p {
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .remove-subject {
+      margin-top: 15px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .remove-subject:hover {
+      color: var(--burgundy);
     }
 
     .add-subject {
@@ -228,11 +234,13 @@
       background: rgba(199,155,59,.04);
       color: var(--burgundy);
       border-radius: 15px;
-      min-height: 125px;
+      min-height: 145px;
       font-weight: bold;
     }
 
-    /* QUICK ACTIONS */
+    .add-subject:hover {
+      background: rgba(199,155,59,.10);
+    }
 
     .actions {
       display: grid;
@@ -264,8 +272,6 @@
       font-size: 12px;
       color: #ead8cc;
     }
-
-    /* DASHBOARD CARDS */
 
     .dashboard {
       display: grid;
@@ -307,8 +313,6 @@
       background: var(--gold);
       border-radius: 20px;
     }
-
-    /* MOBILE */
 
     @media (max-width: 760px) {
       .sidebar {
@@ -385,7 +389,6 @@
       </div>
     </aside>
 
-
     <main class="main">
       <div class="page">
 
@@ -399,7 +402,6 @@
           </p>
         </section>
 
-
         <div class="section-title">
           <div>
             <h2>My Subjects</h2>
@@ -407,12 +409,172 @@
           </div>
         </div>
 
-        <section class="subjects">
+        <section class="subjects" id="subjects"></section>
 
-          <div class="subject-card">
-            <h3>Biology</h3>
-            <p>Your biology notes and revision.</p>
+        <div class="section-title">
+          <div>
+            <h2>Quick Actions</h2>
+            <div class="gold-line"></div>
+          </div>
+        </div>
+
+        <section class="actions">
+
+          <button class="action">
+            <strong>＋ Create Note</strong>
+            <span>Start a new study note</span>
+          </button>
+
+          <button class="action">
+            <strong>↥ Upload Notes</strong>
+            <span>Add your existing material</span>
+          </button>
+
+          <button class="action">
+            <strong>◇ Flashcards</strong>
+            <span>Build active recall practice</span>
+          </button>
+
+          <button class="action">
+            <strong>✦ Ask EZNest AI</strong>
+            <span>Study with your AI assistant</span>
+          </button>
+
+        </section>
+
+        <section class="dashboard">
+
+          <div class="dashboard-card">
+            <h3>Today's Nest</h3>
+            <p class="empty">
+              Nothing planned yet. Your study targets will appear here.
+            </p>
           </div>
 
-          <div class="subject-card">
-            <h3
+          <div class="dashboard-card">
+            <h3>Your Progress</h3>
+            <p class="empty">
+              Your progress will grow as you create notes and revise.
+            </p>
+
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    const SUBJECTS_KEY = "eznest_subjects";
+
+    let subjects = JSON.parse(
+      localStorage.getItem(SUBJECTS_KEY)
+    ) || [
+      "Biology",
+      "Psychology",
+      "Sociology",
+      "Food Science"
+    ];
+
+    const subjectsContainer = document.getElementById("subjects");
+
+    function saveSubjects() {
+      localStorage.setItem(
+        SUBJECTS_KEY,
+        JSON.stringify(subjects)
+      );
+    }
+
+    function renderSubjects() {
+      subjectsContainer.innerHTML = "";
+
+      subjects.forEach((subject, index) => {
+
+        const card = document.createElement("div");
+        card.className = "subject-card";
+
+        const title = document.createElement("h3");
+        title.textContent = subject;
+
+        const description = document.createElement("p");
+        description.textContent =
+          `Your ${subject.toLowerCase()} notes and revision.`;
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "remove-subject";
+        removeButton.textContent = "Remove subject";
+
+        removeButton.addEventListener("click", function () {
+          removeSubject(index);
+        });
+
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(removeButton);
+
+        subjectsContainer.appendChild(card);
+      });
+
+      const addButton = document.createElement("button");
+      addButton.className = "add-subject";
+      addButton.textContent = "+ Add Subject";
+
+      addButton.addEventListener("click", addSubject);
+
+      subjectsContainer.appendChild(addButton);
+    }
+
+    function addSubject() {
+
+      const name = prompt(
+        "What subject would you like to add?"
+      );
+
+      if (!name) return;
+
+      const cleanName = name.trim();
+
+      if (!cleanName) return;
+
+      const alreadyExists = subjects.some(
+        subject =>
+          subject.toLowerCase() === cleanName.toLowerCase()
+      );
+
+      if (alreadyExists) {
+        alert("That subject is already in your Nest.");
+        return;
+      }
+
+      subjects.push(cleanName);
+
+      saveSubjects();
+      renderSubjects();
+    }
+
+    function removeSubject(index) {
+
+      const subject = subjects[index];
+
+      const confirmed = confirm(
+        `Remove ${subject} from your subjects?`
+      );
+
+      if (!confirmed) return;
+
+      subjects.splice(index, 1);
+
+      saveSubjects();
+      renderSubjects();
+    }
+
+    renderSubjects();
+  </script>
+
+</body>
+</html>
