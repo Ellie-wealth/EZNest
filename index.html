@@ -1,580 +1,631 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EZNest — Learn. Organise. Grow.</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZNestt — Learn. Organise. Grow.</title>
 
-  <style>
-    :root {
-      --burgundy: #681f35;
-      --dark-burgundy: #4e1728;
-      --gold: #c79b3b;
-      --ivory: #fffaf0;
-      --white: #fffdf8;
-      --text: #34272c;
-      --muted: #806f76;
-      --border: #eadfd5;
-    }
+<style>
+:root{
+  --burgundy:#681f35;
+  --dark:#4e1728;
+  --gold:#c79b3b;
+  --ivory:#fffaf0;
+  --white:#fffdf8;
+  --text:#34272c;
+  --muted:#806f76;
+  --border:#eadfd5;
+  --soft:#f4ebe2;
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: var(--ivory);
-      color: var(--text);
-    }
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:var(--ivory);
+  color:var(--text);
+}
 
-    h1, h2, h3 {
-      font-family: Georgia, "Times New Roman", serif;
-    }
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+button{font:inherit;cursor:pointer}
 
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
+.app{min-height:100vh;display:flex}
 
-    .app {
-      min-height: 100vh;
-      display: flex;
-    }
+.sidebar{
+  width:245px;
+  min-height:100vh;
+  background:var(--burgundy);
+  color:white;
+  padding:30px 20px;
+  position:fixed;
+  inset:0 auto 0 0;
+  display:flex;
+  flex-direction:column;
+}
 
-    .sidebar {
-      width: 245px;
-      min-height: 100vh;
-      background: var(--burgundy);
-      color: white;
-      padding: 30px 20px;
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:40px;
+  padding:0 8px;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 45px;
-      padding: 0 8px;
-    }
+.swan{
+  width:42px;height:42px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
+  font-size:22px;
+}
 
-    .swan {
-      width: 42px;
-      height: 42px;
-      border: 2px solid var(--gold);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: var(--gold);
-      font-size: 23px;
-    }
+.brand-name{
+  font-family:Georgia,serif;
+  font-size:25px;
+  font-weight:bold;
+}
 
-    .brand-name {
-      font-family: Georgia, serif;
-      font-size: 25px;
-      font-weight: bold;
-    }
+.nav{display:flex;flex-direction:column;gap:7px}
 
-    .nav {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
+.nav button{
+  border:0;
+  background:transparent;
+  color:#f7e9df;
+  text-align:left;
+  padding:13px 14px;
+  border-radius:10px;
+}
 
-    .nav button {
-      border: none;
-      background: transparent;
-      color: #f7e9df;
-      text-align: left;
-      padding: 13px 14px;
-      border-radius: 10px;
-    }
+.nav button:hover,.nav button.active{
+  background:rgba(255,255,255,.12);
+  color:white;
+}
 
-    .nav button:hover,
-    .nav button.active {
-      background: rgba(255,255,255,.12);
-      color: white;
-    }
+.tagline{
+  margin-top:auto;
+  padding:15px 8px;
+  color:#e8d3bd;
+  font-family:Georgia,serif;
+  line-height:1.6;
+}
 
-    .tagline {
-      margin-top: auto;
-      padding: 15px 8px;
-      color: #e8d3bd;
-      font-family: Georgia, serif;
-      font-size: 14px;
-      line-height: 1.6;
-    }
+.main{
+  margin-left:245px;
+  width:calc(100% - 245px);
+  padding:42px;
+}
 
-    .main {
-      margin-left: 245px;
-      width: calc(100% - 245px);
-      padding: 48px;
-    }
+.page{max-width:1180px;margin:auto}
 
-    .page {
-      max-width: 1180px;
-      margin: auto;
-    }
+.page-section{display:none}
+.page-section.active{display:block}
 
-    .welcome {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 38px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-    }
+.welcome{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:38px;
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+}
 
-    .welcome::after {
-      content: "🦢";
-      position: absolute;
-      right: 35px;
-      bottom: 18px;
-      font-size: 80px;
-      opacity: .10;
-    }
+.welcome:after{
+  content:"🦢";
+  position:absolute;
+  right:35px;
+  bottom:15px;
+  font-size:80px;
+  opacity:.1;
+}
 
-    .eyebrow {
-      color: var(--gold);
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+.eyebrow{
+  color:var(--gold);
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
 
-    .welcome h1 {
-      color: var(--burgundy);
-      font-size: clamp(32px, 5vw, 52px);
-      margin-bottom: 12px;
-    }
+.welcome h1{
+  color:var(--burgundy);
+  font-size:clamp(32px,5vw,52px);
+  margin-bottom:12px;
+}
 
-    .welcome p {
-      color: var(--muted);
-      font-size: 17px;
-      max-width: 650px;
-      line-height: 1.7;
-    }
+.welcome p{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.7;
+}
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 30px 0 15px;
-    }
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:30px 0 15px;
+}
 
-    .section-title h2 {
-      color: var(--dark-burgundy);
-      font-size: 24px;
-    }
+.section-title h2{
+  color:var(--dark);
+  font-size:24px;
+}
 
-    .gold-line {
-      width: 55px;
-      height: 2px;
-      background: var(--gold);
-      margin-top: 8px;
-    }
+.gold-line{
+  width:55px;
+  height:2px;
+  background:var(--gold);
+  margin-top:8px;
+}
 
-    .subjects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 16px;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:16px;
+}
 
-    .subject-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 22px;
-      min-height: 145px;
-      transition: transform .2s, box-shadow .2s;
-    }
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:22px;
+}
 
-    .subject-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(78,23,40,.08);
-    }
+.subject-card{
+  min-height:145px;
+}
 
-    .subject-card h3 {
-      color: var(--burgundy);
-      font-size: 19px;
-      margin-bottom: 8px;
-    }
+.subject-card h3{
+  color:var(--burgundy);
+  margin-bottom:8px;
+}
 
-    .subject-card p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
+.subject-card p,.muted{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
 
-    .remove-subject {
-      margin-top: 15px;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 12px;
-      padding: 0;
-    }
+.add-card{
+  border:1.5px dashed var(--gold);
+  background:rgba(199,155,59,.04);
+  color:var(--burgundy);
+  border-radius:15px;
+  min-height:145px;
+  font-weight:bold;
+}
 
-    .remove-subject:hover {
-      color: var(--burgundy);
-    }
+.actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:13px;
+}
 
-    .add-subject {
-      border: 1.5px dashed var(--gold);
-      background: rgba(199,155,59,.04);
-      color: var(--burgundy);
-      border-radius: 15px;
-      min-height: 145px;
-      font-weight: bold;
-    }
+.action{
+  background:var(--burgundy);
+  color:white;
+  border:0;
+  border-radius:12px;
+  padding:18px;
+  text-align:left;
+}
 
-    .add-subject:hover {
-      background: rgba(199,155,59,.10);
-    }
+.action:hover{background:var(--dark)}
 
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 13px;
-    }
+.action strong{display:block;margin-bottom:5px}
+.action span{font-size:12px;color:#ead8cc}
 
-    .action {
-      background: var(--burgundy);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 17px;
-      text-align: left;
-      transition: .2s;
-    }
+.dashboard{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:25px;
+}
 
-    .action:hover {
-      background: var(--dark-burgundy);
-      transform: translateY(-2px);
-    }
+.progress-bar{
+  height:9px;
+  background:#eee4da;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:12px;
+}
 
-    .action strong {
-      display: block;
-      margin-bottom: 5px;
-    }
+.progress-fill{
+  height:100%;
+  width:0;
+  background:var(--gold);
+}
 
-    .action span {
-      font-size: 12px;
-      color: #ead8cc;
-    }
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:25px;
+}
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 25px;
-    }
+.topbar h1{color:var(--burgundy)}
 
-    .dashboard-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 25px;
-    }
+.primary{
+  background:var(--burgundy);
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:11px 17px;
+}
 
-    .dashboard-card h3 {
-      color: var(--burgundy);
-      margin-bottom: 15px;
-      font-size: 20px;
-    }
+.secondary{
+  background:var(--soft);
+  color:var(--burgundy);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 15px;
+}
 
-    .empty {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
+.danger{
+  color:#9b334b;
+  background:transparent;
+  border:0;
+  font-size:13px;
+}
 
-    .progress-bar {
-      height: 9px;
-      background: #eee4da;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
+.notes-list{
+  display:grid;
+  gap:14px;
+}
 
-    .progress-fill {
-      width: 12%;
-      height: 100%;
-      background: var(--gold);
-      border-radius: 20px;
-    }
+.note{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+}
 
-    @media (max-width: 760px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        min-height: auto;
-        padding: 18px;
-      }
+.note h3{
+  color:var(--burgundy);
+  margin-bottom:7px;
+}
 
-      .app {
-        display: block;
-      }
+.note-actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
 
-      .brand {
-        margin-bottom: 18px;
-      }
+.form{
+  display:grid;
+  gap:15px;
+}
 
-      .nav {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-      }
+label{
+  color:var(--burgundy);
+  font-weight:bold;
+  font-size:14px;
+}
 
-      .nav button {
-        text-align: center;
-        padding: 10px 5px;
-        font-size: 12px;
-      }
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--white);
+  border-radius:10px;
+  padding:12px;
+  color:var(--text);
+  font:inherit;
+}
 
-      .tagline {
-        display: none;
-      }
+textarea{
+  min-height:130px;
+  resize:vertical;
+}
 
-      .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
-      }
+.cornell{
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:0;
+}
 
-      .welcome {
-        padding: 27px 22px;
-      }
+.cornell textarea{
+  border-radius:0;
+  min-height:180px;
+}
 
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.cue{
+  border-right:1px solid var(--border);
+}
+
+.summary{
+  grid-column:1/-1;
+}
+
+.flashcard{
+  background:var(--burgundy);
+  color:white;
+  border-radius:16px;
+  padding:35px;
+  min-height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+  margin-bottom:15px;
+}
+
+.flashcard h2{font-size:24px}
+
+.target{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:15px;
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:15px;
+}
+
+.stat{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:25px;
+}
+
+.stat-number{
+  font-size:32px;
+  color:var(--burgundy);
+  font-family:Georgia,serif;
+  font-weight:bold;
+}
+
+.empty{
+  color:var(--muted);
+  line-height:1.6;
+  padding:20px 0;
+}
+
+.ai-box{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:25px;
+}
+
+.ai-message{
+  background:var(--soft);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:15px;
+  line-height:1.6;
+}
+
+@media(max-width:760px){
+
+  .app{display:block}
+
+  .sidebar{
+    position:static;
+    width:100%;
+    min-height:auto;
+    padding:18px;
+  }
+
+  .brand{margin-bottom:18px}
+
+  .nav{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .nav button{
+    text-align:center;
+    padding:9px 3px;
+    font-size:11px;
+  }
+
+  .tagline{display:none}
+
+  .main{
+    margin-left:0;
+    width:100%;
+    padding:20px;
+  }
+
+  .welcome{padding:27px 22px}
+
+  .dashboard{grid-template-columns:1fr}
+
+  .cornell{
+    grid-template-columns:1fr;
+  }
+
+  .cue{
+    border-right:0;
+    border-bottom:1px solid var(--border);
+  }
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="swan">🦢</div>
-        <div class="brand-name">EZNest</div>
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="swan">🦢</div>
+    <div class="brand-name">EZNestt</div>
+  </div>
+
+  <nav class="nav">
+    <button class="active" onclick="showPage('home',this)">⌂ Home</button>
+    <button onclick="showPage('notes',this)">▤ Notes</button>
+    <button onclick="showPage('revision',this)">◈ Revision</button>
+    <button onclick="showPage('calendar',this)">□ Calendar</button>
+    <button onclick="showPage('progress',this)">◌ Progress</button>
+    <button onclick="showPage('ai',this)">✦ EZNest AI</button>
+    <button onclick="showPage('settings',this)">⚙ Settings</button>
+  </nav>
+
+  <div class="tagline">
+    Learn.<br>
+    Organise.<br>
+    Grow.
+  </div>
+
+</aside>
+
+<main class="main">
+<div class="page">
+
+<!-- HOME -->
+<section id="home" class="page-section active">
+
+  <section class="welcome">
+    <div class="eyebrow">Your study space</div>
+    <h1>Hi Nesty 🦢</h1>
+    <p>Your study space, made easy.</p>
+  </section>
+
+  <div class="section-title">
+    <div>
+      <h2>My Subjects</h2>
+      <div class="gold-line"></div>
+    </div>
+  </div>
+
+  <section id="homeSubjects" class="grid"></section>
+
+  <div class="section-title">
+    <div>
+      <h2>Quick Actions</h2>
+      <div class="gold-line"></div>
+    </div>
+  </div>
+
+  <section class="actions">
+    <button class="action" onclick="newNote()">
+      <strong>＋ Create Note</strong>
+      <span>Start a new study note</span>
+    </button>
+
+    <button class="action" onclick="showPage('notes')">
+      <strong>↥ My Notes</strong>
+      <span>View your saved notes</span>
+    </button>
+
+    <button class="action" onclick="showPage('revision')">
+      <strong>◇ Revision</strong>
+      <span>Practise and test yourself</span>
+    </button>
+
+    <button class="action" onclick="showPage('ai')">
+      <strong>✦ Ask EZNest AI</strong>
+      <span>Study with your AI assistant</span>
+    </button>
+  </section>
+
+  <section class="dashboard">
+
+    <div class="card">
+      <h3>Today's Nest</h3>
+      <div id="todayHome" class="empty">
+        Nothing planned yet.
       </div>
+    </div>
 
-      <nav class="nav">
-        <button class="active">⌂ Home</button>
-        <button>▤ Notes</button>
-        <button>◈ Revision</button>
-        <button>□ Calendar</button>
-        <button>◌ Progress</button>
-        <button>✦ EZNest AI</button>
-        <button>⚙ Settings</button>
-      </nav>
-
-      <div class="tagline">
-        Learn.<br>
-        Organise.<br>
-        Grow.
+    <div class="card">
+      <h3>Your Progress</h3>
+      <div id="homeProgress" class="empty">
+        Start studying to build your progress.
       </div>
-    </aside>
-
-    <main class="main">
-      <div class="page">
-
-        <section class="welcome">
-          <div class="eyebrow">Your study space</div>
-          <h1>Hi Nesty 🦢</h1>
-          <p>
-            Your study space, made easy.
-            Gather your notes, organise your revision,
-            and make room to focus.
-          </p>
-        </section>
-
-        <div class="section-title">
-          <div>
-            <h2>My Subjects</h2>
-            <div class="gold-line"></div>
-          </div>
-        </div>
-
-        <section class="subjects" id="subjects"></section>
-
-        <div class="section-title">
-          <div>
-            <h2>Quick Actions</h2>
-            <div class="gold-line"></div>
-          </div>
-        </div>
-
-        <section class="actions">
-
-          <button class="action">
-            <strong>＋ Create Note</strong>
-            <span>Start a new study note</span>
-          </button>
-
-          <button class="action">
-            <strong>↥ Upload Notes</strong>
-            <span>Add your existing material</span>
-          </button>
-
-          <button class="action">
-            <strong>◇ Flashcards</strong>
-            <span>Build active recall practice</span>
-          </button>
-
-          <button class="action">
-            <strong>✦ Ask EZNest AI</strong>
-            <span>Study with your AI assistant</span>
-          </button>
-
-        </section>
-
-        <section class="dashboard">
-
-          <div class="dashboard-card">
-            <h3>Today's Nest</h3>
-            <p class="empty">
-              Nothing planned yet. Your study targets will appear here.
-            </p>
-          </div>
-
-          <div class="dashboard-card">
-            <h3>Your Progress</h3>
-            <p class="empty">
-              Your progress will grow as you create notes and revise.
-            </p>
-
-            <div class="progress-bar">
-              <div class="progress-fill"></div>
-            </div>
-          </div>
-
-        </section>
-
+      <div class="progress-bar">
+        <div id="homeProgressBar" class="progress-fill"></div>
       </div>
-    </main>
+    </div>
+
+  </section>
+
+</section>
+
+
+<!-- NOTES -->
+<section id="notes" class="page-section">
+
+  <div class="topbar">
+    <h1>Notes</h1>
+    <button class="primary" onclick="newNote()">＋ Create Note</button>
+  </div>
+
+  <div id="notesList" class="notes-list"></div>
+
+</section>
+
+
+<!-- REVISION -->
+<section id="revision" class="page-section">
+
+  <div class="topbar">
+    <h1>Revision</h1>
+  </div>
+
+  <div class="grid">
+
+    <button class="card" onclick="createFlashcards()">
+      <h3>◇ Flashcards</h3>
+      <p class="muted">Create simple active-recall cards.</p>
+    </button>
+
+    <button class="card" onclick="createQuestion()">
+      <h3>✦ Exam Questions</h3>
+      <p class="muted">Build your own practice questions.</p>
+    </button>
 
   </div>
 
-  <script>
-    const SUBJECTS_KEY = "eznest_subjects";
+  <div id="revisionArea" style="margin-top:25px"></div>
 
-    let subjects = JSON.parse(
-      localStorage.getItem(SUBJECTS_KEY)
-    ) || [
-      "Biology",
-      "Psychology",
-      "Sociology",
-      "Food Science"
-    ];
+</section>
 
-    const subjectsContainer = document.getElementById("subjects");
 
-    function saveSubjects() {
-      localStorage.setItem(
-        SUBJECTS_KEY,
-        JSON.stringify(subjects)
-      );
-    }
+<!-- CALENDAR -->
+<section id="calendar" class="page-section">
 
-    function renderSubjects() {
-      subjectsContainer.innerHTML = "";
+  <div class="topbar">
+    <h1>Calendar</h1>
+    <button class="primary" onclick="addTarget()">＋ Add Target</button>
+  </div>
 
-      subjects.forEach((subject, index) => {
+  <div id="targetsList"></div>
 
-        const card = document.createElement("div");
-        card.className = "subject-card";
+</section>
 
-        const title = document.createElement("h3");
-        title.textContent = subject;
 
-        const description = document.createElement("p");
-        description.textContent =
-          `Your ${subject.toLowerCase()} notes and revision.`;
+<!-- PROGRESS -->
+<section id="progress" class="page-section">
 
-        const removeButton = document.createElement("button");
-        removeButton.className = "remove-subject";
-        removeButton.textContent = "Remove subject";
+  <div class="topbar">
+    <h1>Progress</h1>
+  </div>
 
-        removeButton.addEventListener("click", function () {
-          removeSubject(index);
-        });
+  <div class="stat-grid">
 
-        card.appendChild(title);
-        card.appendChild(description);
-        card.appendChild(removeButton);
-
-        subjectsContainer.appendChild(card);
-      });
-
-      const addButton = document.createElement("button");
-      addButton.className = "add-subject";
-      addButton.textContent = "+ Add Subject";
-
-      addButton.addEventListener("click", addSubject);
-
-      subjectsContainer.appendChild(addButton);
-    }
-
-    function addSubject() {
-
-      const name = prompt(
-        "What subject would you like to add?"
-      );
-
-      if (!name) return;
-
-      const cleanName = name.trim();
-
-      if (!cleanName) return;
-
-      const alreadyExists = subjects.some(
-        subject =>
-          subject.toLowerCase() === cleanName.toLowerCase()
-      );
-
-      if (alreadyExists) {
-        alert("That subject is already in your Nest.");
-        return;
-      }
-
-      subjects.push(cleanName);
-
-      saveSubjects();
-      renderSubjects();
-    }
-
-    function removeSubject(index) {
-
-      const subject = subjects[index];
-
-      const confirmed = confirm(
-        `Remove ${subject} from your subjects?`
-      );
-
-      if (!confirmed) return;
-
-      subjects.splice(index, 1);
-
-      saveSubjects();
-      renderSubjects();
-    }
-
-    renderSubjects();
-  </script>
-
-</body>
-</html>
+    <div class="stat">
+      <div class="stat-number" id="statNotes">0</div>
