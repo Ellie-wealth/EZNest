@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EZNest — Learn. Organise. Grow.</title>
+
+  <style>
+    :root {
+      --burgundy: #681f35;
+      --dark-burgundy: #4e1728;
+      --gold: #c79b3b;
+      --ivory: #fffaf0;
+      --white: #fffdf8;
+      --text: #34272c;
+      --muted: #806f76;
+      --border: #eadfd5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: var(--ivory);
+      color: var(--text);
+    }
+
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 245px;
+      min-height: 100vh;
+      background: var(--burgundy);
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 45px;
+      padding: 0 8px;
+    }
+
+    .swan {
+      width: 42px;
+      height: 42px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: 23px;
+    }
+
+    .brand-name {
+      font-family: Georgia, serif;
+      font-size: 25px;
+      font-weight: bold;
+      letter-spacing: .3px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .nav button {
+      border: none;
+      background: transparent;
+      color: #f7e9df;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 10px;
+      transition: .2s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
+    .tagline {
+      margin-top: auto;
+      padding: 15px 8px;
+      color: #e8d3bd;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 245px;
+      width: calc(100% - 245px);
+      padding: 48px;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: auto;
+    }
+
+    .welcome {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 38px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome::after {
+      content: "🦢";
+      position: absolute;
+      right: 35px;
+      bottom: 18px;
+      font-size: 80px;
+      opacity: .10;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .welcome h1 {
+      color: var(--burgundy);
+      font-size: clamp(32px, 5vw, 52px);
+      margin-bottom: 12px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 650px;
+      line-height: 1.7;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 30px 0 15px;
+    }
+
+    .section-title h2 {
+      color: var(--dark-burgundy);
+      font-size: 24px;
+    }
+
+    .gold-line {
+      width: 55px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+    }
+
+    /* SUBJECTS */
+
+    .subjects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .subject-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 22px;
+      min-height: 125px;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(78,23,40,.08);
+    }
+
+    .subject-card h3 {
+      color: var(--burgundy);
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .subject-card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .add-subject {
+      border: 1.5px dashed var(--gold);
+      background: rgba(199,155,59,.04);
+      color: var(--burgundy);
+      border-radius: 15px;
+      min-height: 125px;
+      font-weight: bold;
+    }
+
+    /* QUICK ACTIONS */
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 13px;
+    }
+
+    .action {
+      background: var(--burgundy);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 17px;
+      text-align: left;
+      transition: .2s;
+    }
+
+    .action:hover {
+      background: var(--dark-burgundy);
+      transform: translateY(-2px);
+    }
+
+    .action strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .action span {
+      font-size: 12px;
+      color: #ead8cc;
+    }
+
+    /* DASHBOARD CARDS */
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .dashboard-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .dashboard-card h3 {
+      color: var(--burgundy);
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .progress-bar {
+      height: 9px;
+      background: #eee4da;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-fill {
+      width: 12%;
+      height: 100%;
+      background: var(--gold);
+      border-radius: 20px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 760px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+        padding: 18px;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .brand {
+        margin-bottom: 18px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .nav button {
+        text-align: center;
+        padding: 10px 5px;
+        font-size: 12px;
+      }
+
+      .tagline {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .welcome {
+        padding: 27px 22px;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="swan">🦢</div>
+        <div class="brand-name">EZNest</div>
+      </div>
+
+      <nav class="nav">
+        <button class="active">⌂ Home</button>
+        <button>▤ Notes</button>
+        <button>◈ Revision</button>
+        <button>□ Calendar</button>
+        <button>◌ Progress</button>
+        <button>✦ EZNest AI</button>
+        <button>⚙ Settings</button>
+      </nav>
+
+      <div class="tagline">
+        Learn.<br>
+        Organise.<br>
+        Grow.
+      </div>
+    </aside>
+
+
+    <main class="main">
+      <div class="page">
+
+        <section class="welcome">
+          <div class="eyebrow">Your study space</div>
+          <h1>Hi Nesty 🦢</h1>
+          <p>
+            Your study space, made easy.
+            Gather your notes, organise your revision,
+            and make room to focus.
+          </p>
+        </section>
+
+
+        <div class="section-title">
+          <div>
+            <h2>My Subjects</h2>
+            <div class="gold-line"></div>
+          </div>
+        </div>
+
+        <section class="subjects">
+
+          <div class="subject-card">
+            <h3>Biology</h3>
+            <p>Your biology notes and revision.</p>
+          </div>
+
+          <div class="subject-card">
+            <h3
