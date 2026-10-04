@@ -1,0 +1,5 @@
+name = "eznest"
+compatibility_date = "2026-10-04"
+
+[assets]
+directory = "."
