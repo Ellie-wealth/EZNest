@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZNestt — Learn. Organise. Grow.</title>
+<style>
+:root{--burgundy:#681f35;--dark:#4e1728;--gold:#c79b3b;--ivory:#fffaf0;--white:#fffdf8;--text:#34272c;--muted:#806f76;--border:#eadfd5;--soft:#f4ebe2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;font-family:Arial,sans-serif;background:var(--ivory);color:var(--text)}
+button{font:inherit;cursor:pointer}h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+.app{min-height:100vh;display:flex}
+.sidebar{width:245px;min-height:100vh;background:var(--burgundy);color:#fff;padding:30px 20px;position:fixed;left:0;top:0;bottom:0}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:40px}.swan{width:42px;height:42px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:21px}.brand-name{font-family:Georgia,serif;font-size:25px;font-weight:bold}
+.nav{display:flex;flex-direction:column;gap:7px}.nav button{border:0;background:transparent;color:#f7e9df;text-align:left;padding:13px 14px;border-radius:10px}.nav button:hover,.nav button.active{background:rgba(255,255,255,.12);color:#fff}
+.tagline{position:absolute;bottom:30px;color:#e8d3bd;font-family:Georgia,serif;line-height:1.6}
+.main{margin-left:245px;width:calc(100% - 245px);padding:42px}.page{max-width:1180px;margin:auto}.page-section{display:none}.page-section.active{display:block}
+.welcome,.card,.note{background:var(--white);border:1px solid var(--border);border-radius:15px}.welcome{border-radius:20px;padding:38px;margin-bottom:28px}
+.eyebrow{color:var(--gold);font-size:13px;text-transform:uppercase;letter-spacing:2px;font-weight:bold;margin-bottom:10px}.welcome h1{color:var(--burgundy);font-size:clamp(32px,5vw,52px);margin-bottom:12px}.welcome p{color:var(--muted);font-size:17px}
+.section-title{margin:30px 0 15px}.section-title h2{color:var(--dark);font-size:24px}.gold-line{width:55px;height:2px;background:var(--gold);margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.card{padding:22px}.subject-card{min-height:145px}.subject-card h3{color:var(--burgundy);margin-bottom:8px}
+.add-card{border:1.5px dashed var(--gold);background:rgba(199,155,59,.04);color:var(--burgundy);border-radius:15px;min-height:145px;font-weight:bold}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px}.action{background:var(--burgundy);color:#fff;border:0;border-radius:12px;padding:18px;text-align:left}.action:hover{background:var(--dark)}.action strong{display:block;margin-bottom:5px}.action span{font-size:12px;color:#ead8cc}
+.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:25px}.progress-bar{height:9px;background:#eee4da;border-radius:20px;overflow:hidden;margin-top:12px}.progress-fill{height:100%;width:0;background:var(--gold)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.topbar h1{color:var(--burgundy)}
+.primary{background:var(--burgundy);color:#fff;border:0;border-radius:10px;padding:11px 17px}.secondary{background:var(--soft);color:var(--burgundy);border:1px solid var(--border);border-radius:10px;padding:10px 15px}.danger{color:#9b334b;background:transparent;border:0;font-size:13px}
+.notes-list{display:grid;gap:14px}.note{padding:20px}.note h3{color:var(--burgundy);margin-bottom:7px}.note-actions{display:flex;gap:10px;margin-top:14px}.note-actions button,.small-btn{border:1px solid var(--border);background:var(--soft);color:var(--burgundy);border-radius:8px;padding:8px 12px}
+.muted{color:var(--muted);font-size:14px;line-height:1.6}.form{display:grid;gap:15px}label{color:var(--burgundy);font-weight:bold;font-size:14px}
+input,select,textarea{width:100%;border:1px solid var(--border);background:var(--white);border-radius:10px;padding:12px;color:var(--text);font:inherit}textarea{min-height:130px;resize:vertical}
+.cornell{display:grid;grid-template-columns:180px 1fr;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white)}
+.cornell>div{padding:0}
+.cornell label{display:block;padding:12px 14px;background:var(--soft);border-bottom:1px solid var(--border)}
+.cornell textarea{display:block;width:100%;border:0;border-radius:0;min-height:190px;padding:14px;background:var(--white);resize:vertical}
+.cornell .cue{border-right:1px solid var(--border)}
+.cornell .cue textarea{min-height:190px}
+.cornell .summary{grid-column:1/-1;border-top:1px solid var(--border)}
+.cornell .summary textarea{min-height:120px}
+.cornell textarea:focus{outline:2px solid rgba(199,155,59,.35);outline-offset:-2px}
+@media(max-width:760px){.cornell{grid-template-columns:1fr}.cornell .cue{border-right:0;border-bottom:1px solid var(--border)}.cornell .summary{grid-column:1}}
+.flashcard{background:var(--burgundy);color:#fff;border-radius:16px;padding:35px;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;margin-bottom:15px}.flashcard h2{font-size:24px}
+.revision-item,.target{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}.target{display:flex;justify-content:space-between;align-items:center;gap:15px}.target label{color:var(--text);display:flex;align-items:center;gap:10px}.target input{width:auto}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}.stat{background:var(--white);border:1px solid var(--border);border-radius:15px;padding:25px}.stat-number{font-size:32px;color:var(--burgundy);font-family:Georgia,serif;font-weight:bold}
+.ai-box{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:25px}.ai-message{background:var(--soft);border-radius:12px;padding:16px;margin-bottom:15px;line-height:1.6}
+.modal{display:none;position:fixed;inset:0;background:rgba(52,39,44,.55);z-index:20;padding:20px;overflow:auto}.modal.open{display:block}.modal-content{max-width:900px;margin:40px auto;background:var(--ivory);border-radius:20px;padding:28px}
+.empty{padding:30px;text-align:center;background:var(--white);border:1px dashed var(--border);border-radius:14px;color:var(--muted)}
+.subject-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid var(--border)}.subject-row:last-child{border-bottom:0}
+@media(max-width:760px){.app{display:block}.sidebar{position:static;width:100%;min-height:auto;padding:18px}.brand{margin-bottom:18px}.nav{display:grid;grid-template-columns:repeat(4,1fr)}.nav button{text-align:center;padding:9px 3px;font-size:11px}.tagline{display:none}.main{margin-left:0;width:100%;padding:20px}.welcome{padding:27px 22px}.dashboard{grid-template-columns:1fr}.cornell{grid-template-columns:1fr}.cue{border-right:0;border-bottom:1px solid var(--border)}.summary{grid-column:1}.topbar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="swan">🦢</div><div class="brand-name">EZNestt</div></div>
+  <nav class="nav">
+    <button data-page="home" class="active">⌂ Home</button>
+    <button data-page="notes">▤ Notes</button>
+    <button data-page="revision">◈ Revision</button>
+    <button data-page="calendar">□ Calendar</button>
+    <button data-page="progress">◌ Progress</button>
+    <button data-page="ai">✦ EZNest AI</button>
+    <button data-page="settings">⚙ Settings</button>
+  </nav>
+  <div class="tagline">Learn.<br>Organise.<br>Grow.</div>
+</aside>
+
+<main class="main"><div class="page">
+<section id="home" class="page-section active">
+  <section class="welcome"><div class="eyebrow">Your study space</div><h1>Hi Nesty 🦢</h1><p>Your study space, made easy.</p></section>
+  <div class="section-title"><h2>My Subjects</h2><div class="gold-line"></div></div>
+  <section id="homeSubjects" class="grid"></section>
+  <div class="section-title"><h2>Quick Actions</h2><div class="gold-line"></div></div>
+  <section class="actions">
+    <button class="action" id="createNoteButton"><strong>＋ Create Note</strong><span>Start a new study note</span></button>
+    <button class="action" data-page-button="notes"><strong>↥ My Notes</strong><span>View your saved notes</span></button>
+    <button class="action" data-page-button="revision"><strong>◇ Revision</strong><span>Practise and test yourself</span></button>
+    <button class="action" data-page-button="ai"><strong>✦ Ask EZNest AI</strong><span>Study with your AI assistant</span></button>
+  </section>
+  <section class="dashboard">
+    <div class="card"><h3>Today's Nest</h3><p id="todayHome" class="muted">Nothing planned yet.</p></div>
+    <div class="card"><h3>Your Progress</h3><p id="homeProgress" class="muted">Start studying to build your progress.</p><div class="progress-bar"><div id="homeProgressBar" class="progress-fill"></div></div></div>
+  </section>
+</section>
+
+<section id="notes" class="page-section">
+  <div class="topbar"><h1>Notes</h1><button class="primary" id="notesCreateButton">＋ Create Note</button></div>
+  <div id="notesList" class="notes-list"></div>
+</section>
+
+<section id="revision" class="page-section">
+  <div class="topbar"><h1>Revision</h1></div>
+  <div class="grid">
+    <button class="card" id="flashcardsButton"><h3>◇ Flashcards</h3><p class="muted">Create simple active-recall cards.</p></button>
+    <button class="card" id="questionsButton"><h3>✦ Exam Questions</h3><p class="muted">Build your own practice questions.</p></button>
+  </div>
+  <div id="revisionArea" style="margin-top:25px"></div>
+</section>
+
+<section id="calendar" class="page-section">
+  <div class="topbar"><h1>Calendar</h1><button class="primary" id="addTargetButton">＋ Add Target</button></div>
+  <div id="targetsList"></div>
+</section>
+
+<section id="progress" class="page-section">
+  <div class="topbar"><h1>Progress</h1></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-number" id="statNotes">0</div><p class="muted">Notes created</p></div>
+    <div class="stat"><div class="stat-number" id="statSubjects">0</div><p class="muted">Subjects</p></div>
+    <div class="stat"><div class="stat-number" id="statTargets">0</div><p class="muted">Study targets</p></div>
+    <div class="stat"><div class="stat-number" id="statRevision">0</div><p class="muted">Revision activities</p></div>
+  </div>
+</section>
+
+<section id="ai" class="page-section">
+  <div class="topbar"><h1>EZNest AI</h1></div>
+  <div class="ai-box">
+    <div class="ai-message"><strong>Hi Nesty 🦢</strong><br><br>What are we studying today?</div>
+    <div class="form"><textarea id="aiInput" placeholder="Ask EZNest AI something..."></textarea><button class="primary" id="aiButton">Ask EZNest AI</button></div>
+    <div id="aiResponse" style="margin-top:20px"></div>
+  </div>
+</section>
+
+<section id="settings" class="page-section">
+  <div class="topbar"><h1>Settings</h1></div>
+  <div class="card"><h3>My Subjects</h3><p class="muted" style="margin:8px 0 20px">Add or remove the subjects in your Nest.</p><div id="settingsSubjects"></div><button class="primary" id="addSubjectButton">＋ Add Subject</button></div>
+</section>
+</div></main></div>
+
+<div id="noteModal" class="modal">
+<div class="modal-content">
+  <div class="topbar"><h1 id="noteModalTitle">Create Note</h1><button class="secondary" id="closeNoteButton">Close</button></div>
+  <div class="form">
+    <label>Note title</label><input id="noteTitle" placeholder="e.g. Cell membranes">
+    <label>Subject</label><select id="noteSubject"></select>
+    <div class="cornell">
+      <div class="cue"><label>Cues / Questions</label><textarea id="noteCue" placeholder="Key questions, terms or cues..."></textarea></div>
+      <div><label>Main Notes</label><textarea id="noteMain" placeholder="Write your main notes here..."></textarea></div>
+      <div class="summary"><label>Summary</label><textarea id="noteSummary" placeholder="Summarise the main ideas..."></textarea></div>
+    </div>
+    <button class="primary" id="saveNoteButton">Save Note</button>
+  </div>
+</div></div>
+
+<script>
+const STORAGE_KEY="eznestt_data";
+const DEFAULT_DATA={subjects:["Biology","Psychology","Sociology","Food Science"],notes:[],targets:[],flashcards:[],questions:[]};
+let data=loadData();
+
+function loadData(){
+  try{
+    const saved=localStorage.getItem(STORAGE_KEY);
+    if(!saved)return structuredClone(DEFAULT_DATA);
+    const p=JSON.parse(saved);
+    let subjects=Array.isArray(p.subjects)?p.subjects:DEFAULT_DATA.subjects;
+    subjects=subjects.map(s=>typeof s==="string"?s:(s?.name||"")).filter(Boolean);
+    return {
+      subjects,
+      notes:Array.isArray(p.notes)?p.notes:[],
+      targets:Array.isArray(p.targets)?p.targets:[],
+      flashcards:Array.isArray(p.flashcards)?p.flashcards:[],
+      questions:Array.isArray(p.questions)?p.questions:[],
+    };
+  }catch(e){console.error("EZNestt data load error:",e);return structuredClone(DEFAULT_DATA)}
+}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+function escapeHTML(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+
+function showPage(page){
+  document.querySelectorAll(".page-section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(page)?.classList.add("active");
+  document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  renderAll();
+}
+function addSubject(){
+  const name=prompt("What is the subject called?");
+  if(!name?.trim())return;
+  data.subjects.push(name.trim());saveData();renderAll();
+}
+function removeSubject(i){
+  if(!data.subjects[i])return;
+  if(confirm("Remove "+data.subjects[i]+"?")){data.subjects.splice(i,1);saveData();renderAll()}
+}
+function renderHomeSubjects(){
+  const c=document.getElementById("homeSubjects");if(!c)return;
+  c.innerHTML=data.subjects.map((s,i)=>`<div class="card subject-card"><h3>${escapeHTML(s)}</h3><p class="muted">${data.notes.filter(n=>n.subject===s).length} notes · ${data.flashcards.filter(f=>f.subject===s).length} flashcards</p></div>`).join("")+
+  `<button class="add-card" id="homeAddSubject">＋ Add Subject</button>`;
+  document.getElementById("homeAddSubject")?.addEventListener("click",addSubject);
+}
+function renderSettingsSubjects(){
+  const c=document.getElementById("settingsSubjects");if(!c)return;
+  if(!data.subjects.length){c.innerHTML='<div class="empty">No subjects yet.</div>';return}
+  c.innerHTML=data.subjects.map((s,i)=>`<div class="subject-row"><span>${escapeHTML(s)}</span><button class="danger" data-remove-subject="${i}">Remove</button></div>`).join("");
+  c.querySelectorAll("[data-remove-subject]").forEach(b=>b.addEventListener("click",()=>removeSubject(Number(b.dataset.removeSubject))));
+}
+function renderSubjectOptions(){
+  const s=document.getElementById("noteSubject");if(!s)return;
+  const current=s.value;
+  s.innerHTML='<option value="">Choose a subject</option>'+data.subjects.map(x=>`<option value="${escapeHTML(x)}">${escapeHTML(x)}</option>`).join("");
+  if(data.subjects.includes(current))s.value=current;
+}
+function openNewNote(){
+  document.getElementById("noteModalTitle").textContent="Create Note";
+  document.getElementById("noteTitle").value="";
+  document.getElementById("noteSubject").value="";
+  document.getElementById("noteCue").value="";
+  document.getElementById("noteMain").value="";
+  document.getElementById("noteSummary").value="";
+  document.getElementById("noteModal").dataset.editing="";
+  document.getElementById("noteModal").classList.add("open");
+}
+function openExistingNote(i){
+  const n=data.notes[i];if(!n)return;
+  document.getElementById("noteModalTitle").textContent="Edit Note";
+  document.getElementById("noteTitle").value=n.title||"";
+  document.getElementById("noteSubject").value=n.subject||"";
+  document.getElementById("noteCue").value=n.cues||"";
+  document.getElementById("noteMain").value=n.main||"";
+  document.getElementById("noteSummary").value=n.summary||"";
+  document.getElementById("noteModal").dataset.editing=i;
+  document.getElementById("noteModal").classList.add("open");
+}
+function closeNote(){document.getElementById("noteModal").classList.remove("open")}
+function saveNote(){
+  const title=document.getElementById("noteTitle").value.trim();
+  if(!title){alert("Please give your note a title.");return}
+  const note={title,subject:document.getElementById("noteSubject").value,cues:document.getElementById("noteCue").value,main:document.getElementById("noteMain").value,summary:document.getElementById("noteSummary").value,date:new Date().toISOString()};
+  const m=document.getElementById("noteModal"),editing=m.dataset.editing;
+  if(editing==="")data.notes.unshift(note);else data.notes[Number(editing)]=note;
+  saveData();closeNote();renderAll();
+}
+function deleteNote(i){if(confirm("Delete this note?")){data.notes.splice(i,1);saveData();renderAll()}}
+function renderNotes(){
+  const c=document.getElementById("notesList");if(!c)return;
+  if(!data.notes.length){c.innerHTML='<div class="empty"><p>No notes yet.</p><br><button class="primary" id="emptyNewNote">＋ Create Note</button></div>';document.getElementById("emptyNewNote")?.addEventListener("click",openNewNote);return}
+  c.innerHTML=data.notes.map((n,i)=>`<div class="note"><h3>${escapeHTML(n.title)}</h3><p class="muted">${escapeHTML(n.subject||"No subject")}</p><p class="muted" style="margin-top:8px">${escapeHTML(n.summary||n.main||"No summary yet.")}</p><div class="note-actions"><button data-open-note="${i}">Open</button><button data-delete-note="${i}">Delete</button></div></div>`).join("");
+  c.querySelectorAll("[data-open-note]").forEach(b=>b.addEventListener("click",()=>openExistingNote(Number(b.dataset.openNote))));
+  c.querySelectorAll("[data-delete-note]").forEach(b=>b.addEventListener("click",()=>deleteNote(Number(b.dataset.deleteNote))));
+}
+function addTarget(){
+  const title=prompt("What is your study target?");
+  if(!title?.trim())return;
+  data.targets.push({title:title.trim(),completed:false,date:new Date().toISOString()});saveData();renderAll();
+}
+function renderTargets(){
+  const c=document.getElementById("targetsList");if(!c)return;
+  if(!data.targets.length){c.innerHTML='<div class="empty">No study targets yet.<br><br><button class="primary" id="emptyTarget">＋ Add Target</button></div>';document.getElementById("emptyTarget")?.addEventListener("click",addTarget);return}
+  c.innerHTML=data.targets.map((t,i)=>`<div class="target"><label><input type="checkbox" data-target="${i}" ${t.completed?"checked":""}><span style="${t.completed?"text-decoration:line-through;color:var(--muted)":""}">${escapeHTML(t.title)}</span></label><button class="danger" data-delete-target="${i}">Delete</button></div>`).join("");
+  c.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("change",()=>{data.targets[Number(b.dataset.target)].completed=b.checked;saveData();renderAll()}));
+  c.querySelectorAll("[data-delete-target]").forEach(b=>b.addEventListener("click",()=>{data.targets.splice(Number(b.dataset.deleteTarget),1);saveData();renderAll()}));
+}
+function createFlashcard(){
+  const front=prompt("Flashcard question:");if(!front?.trim())return;
+  const back=prompt("Flashcard answer:");if(!back?.trim())return;
+  const subject=prompt("Subject (optional):")||"";
+  data.flashcards.push({front:front.trim(),back:back.trim(),subject:subject.trim()});saveData();renderRevision();
+}
+function createQuestion(){
+  const q=prompt("Enter an exam-style question:");if(!q?.trim())return;
+  const a=prompt("Enter the model answer:");if(!a?.trim())return;
+  data.questions.push({question:q.trim(),answer:a.trim()});saveData();renderRevision();
+}
+function renderRevision(){
+  const c=document.getElementById("revisionArea");if(!c)return;
+  c.innerHTML=`<div class="section-title"><h2>Flashcards</h2><div class="gold-line"></div></div>`+
+  (data.flashcards.length?data.flashcards.map((f,i)=>`<div class="flashcard" data-flip="${i}"><div><h2>${escapeHTML(f.front)}</h2><p style="margin-top:12px;font-size:13px;opacity:.8">Tap to reveal answer</p></div></div>`).join(""):'<div class="empty">No flashcards yet.</div>')+
+  `<div class="section-title"><h2>Exam Questions</h2><div class="gold-line"></div></div>`+
+  (data.questions.length?data.questions.map(q=>`<div class="revision-item"><h3>${escapeHTML(q.question)}</h3><details style="margin-top:10px"><summary>View model answer</summary><p class="muted" style="margin-top:10px">${escapeHTML(q.answer)}</p></details></div>`).join(""):'<div class="empty">No exam questions yet.</div>');
+  c.querySelectorAll("[data-flip]").forEach(card=>card.addEventListener("click",()=>{const f=data.flashcards[Number(card.dataset.flip)];card.innerHTML=`<div><h2>${escapeHTML(f.back)}</h2><p style="margin-top:12px;font-size:13px;opacity:.8">Tap to show question</p></div>`;card.dataset.flipped="true";card.onclick=()=>{card.innerHTML=`<div><h2>${escapeHTML(f.front)}</h2><p style="margin-top:12px;font-size:13px;opacity:.8">Tap to reveal answer</p></div>`}}));
+}
+function askAI(){
+  const input=document.getElementById("aiInput"),out=document.getElementById("aiResponse"),text=input.value.trim();
+  if(!text){out.innerHTML='<div class="ai-message">Tell me what you want to study.</div>';return}
+  out.innerHTML=`<div class="ai-message"><strong>EZNest AI 🦢</strong><p style="margin-top:10px">AI connection isn't enabled yet.</p><p style="margin-top:8px">Your request was: <em>${escapeHTML(text)}</em></p><small>The secure AI backend can be connected in the next phase.</small></div>`;
+}
+function renderProgress(){
+  document.getElementById("statNotes").textContent=data.notes.length;
+  document.getElementById("statSubjects").textContent=data.subjects.length;
+  document.getElementById("statTargets").textContent=data.targets.filter(t=>t.completed).length;
+  document.getElementById("statRevision").textContent=data.flashcards.length+data.questions.length;
+  const total=data.notes.length+data.flashcards.length+data.questions.length+data.targets.filter(t=>t.completed).length;
+  const pct=Math.min(100,total*10);
+  document.getElementById("homeProgressBar").style.width=pct+"%";
+  document.getElementById("homeProgress").textContent=total?`${total} study activities completed or created.`:"Start studying to build your progress.";
+}
+function renderToday(){
+  const c=document.getElementById("todayHome"),pending=data.targets.filter(t=>!t.completed);
+  c.textContent=pending.length?pending[0].title:"Nothing planned yet.";
+}
+function renderAll(){renderHomeSubjects();renderSettingsSubjects();renderSubjectOptions();renderNotes();renderTargets();renderRevision();renderProgress();renderToday()}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("[data-page-button]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.pageButton)));
+document.getElementById("createNoteButton").addEventListener("click",openNewNote);
+document.getElementById("notesCreateButton").addEventListener("click",openNewNote);
+document.getElementById("closeNoteButton").addEventListener("click",closeNote);
+document.getElementById("saveNoteButton").addEventListener("click",saveNote);
+document.getElementById("addSubjectButton").addEventListener("click",addSubject);
+document.getElementById("addTargetButton").addEventListener("click",addTarget);
+document.getElementById("flashcardsButton").addEventListener("click",createFlashcard);
+document.getElementById("questionsButton").addEventListener("click",createQuestion);
+document.getElementById("aiButton").addEventListener("click",askAI);
+document.getElementById("noteModal").addEventListener("click",e=>{if(e.target.id==="noteModal")closeNote()});
+renderAll();
+</script>
+</body>
+</html>
